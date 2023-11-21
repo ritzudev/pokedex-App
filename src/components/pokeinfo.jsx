@@ -25,7 +25,7 @@ async function getEvolution(url) {
   }
 }
 
-export function PokeInfo({ dataPoke }) {
+export function PokeInfo({ dataPoke, onClick }) {
   const [descPokemon, setDescPokemon] = useState("");
   const [evoPokemon, setEvoPokemon] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -114,13 +114,21 @@ export function PokeInfo({ dataPoke }) {
       .replace("/", "");
   }
 
-  const PokemonImage = ({ species }) => (
+  const PokemonImage = ({ species }) => {
+    const idPokemon = filterIdFromSpeciesURL(species?.url)
+    return (
     <img
+    onClick={() =>
+      onClick({
+        idPokemon
+    })}
       className="h-16 w-16"
-      src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${filterIdFromSpeciesURL(species.url)}.png`}
+      src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${idPokemon}.png`}
       alt=""
     />
-  );
+  
+    )
+  }
   
   const EvolutionDetails = ({ details }) => (
     <span className="bg-[#F6F8FC] dark:bg-[#1A1A1A] px-4 py-1 rounded-full text-xs font-bold flex h-min">
@@ -128,14 +136,20 @@ export function PokeInfo({ dataPoke }) {
     </span>
   );
 
-  const EvolutionChain = ({ chain }) => (
-    <section className="flex flex-wrap sm:flex-nowrap items-center justify-center pb-4">
+  const EvolutionChain = ({ chain }) => {
+
+    if (chain === undefined) {
+      return;
+    }
+
+    return (
+      <section className="flex flex-wrap sm:flex-nowrap items-center justify-center pb-4">
       {isLoading ? (
         <h1>loading...</h1>
       ) : (
         <>
-          <PokemonImage species={chain.species} />
-          <EvolutionDetails details={chain.evolves_to[0].evolution_details[0]} />
+          <PokemonImage species={chain?.species} />
+          <EvolutionDetails details={chain?.evolves_to[0].evolution_details[0]} />
   
           {chain.evolves_to?.[0] && (
             <>
@@ -143,8 +157,8 @@ export function PokeInfo({ dataPoke }) {
               
               {chain.evolves_to[0]?.evolves_to?.[0] && (
                 <>
-                  <PokemonImage species={chain.evolves_to[0].evolves_to[0].species} />
                   <EvolutionDetails details={chain.evolves_to[0].evolves_to[0].evolution_details[0]} />
+                  <PokemonImage species={chain.evolves_to[0].evolves_to[0].species} />
                 </>
               )}
             </>
@@ -152,7 +166,8 @@ export function PokeInfo({ dataPoke }) {
         </>
       )}
     </section>
-  );
+    )
+  };
 
   return (
     <>
@@ -247,7 +262,7 @@ export function PokeInfo({ dataPoke }) {
 
         {/* EVOLUTION */}
         <h4>Evolution</h4>
-        <EvolutionChain chain={evoPokemon.chain} />
+        <EvolutionChain chain={evoPokemon?.chain} />
         
       </section>
     </>

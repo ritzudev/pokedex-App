@@ -15,6 +15,11 @@ async function fetchPokemon(startIndex, endIndex) {
 
   return p;
 }
+async function getPokemon(idPokemon) {
+  const resp = await fetch("https://pokeapi.co/api/v2/pokemon/" + idPokemon);
+  const data = await resp.json();
+  return data;
+}
 
 export default function Home() {
   const [dataPokemones, setDataPokemones] = useState([]);
@@ -24,6 +29,34 @@ export default function Home() {
   const [endIndex, setEndIndex] = useState(20);
 
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingInfo, setIsLoadingInfo] = useState(false);
+  
+  const [idPoke, setIdPoke] = useState(null);
+
+  const setdataId = (data) => {
+    const id = parseInt(data.idPokemon)
+    setIdPoke(id);
+  }
+
+  useEffect(() => {
+    const fetchDatapoke = async () => {
+      if (idPoke === null) {
+        return;
+      }
+      try {
+        setIsLoadingInfo(true)
+        const pokemonData = await getPokemon(idPoke);
+        setDataPokeInfo(pokemonData);
+        console.log("Pokemon data:", pokemonData);
+        setIsLoadingInfo(false)
+        // Aquí puedes realizar cualquier lógica adicional con los datos del Pokémon
+      } catch (error) {
+        console.error("Error fetching Pokémon data:", error);
+      }
+    };
+
+    fetchDatapoke();
+  }, [idPoke]); 
 
   const handlePokeCardClick = (data) => {
     setDataPokeInfo(data);
@@ -110,7 +143,7 @@ export default function Home() {
         </div>
       ) : (
         <div className="hidden lg:flex mt-44 bg-white dark:bg-[#333333] fixed  md:right-32 xl:right-32  w-[23rem]  rounded-2xl shadow-xl  flex-col items-center px-4  gap-2 lg:h-[75vh] lg:bottom-20">
-          <PokeInfo dataPoke={dataPokeInfo} />
+          <PokeInfo dataPoke={dataPokeInfo} onClick={setdataId} />
         </div>
       )}
 
