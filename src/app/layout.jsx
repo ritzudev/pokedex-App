@@ -1,3 +1,4 @@
+import "./globals.css";
 import { TopScroll } from "@/components/topscroll";
 
 export const metadata = {
