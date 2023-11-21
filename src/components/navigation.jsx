@@ -1,3 +1,5 @@
+"use client"
+
 export function Navigation() {
   const getPoke = async ({ name = "charizard" }) => {
     try {
