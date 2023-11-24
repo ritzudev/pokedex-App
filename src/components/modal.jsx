@@ -28,7 +28,7 @@ export function Modal({ children, onClose }) {
   return (
     <>
       {shouldRenderModal && (
-        <div className="modalOverlay lg:hidden" onClick={onClose}>
+        <div className="modalOverlay lg:hidden " onClick={onClose}>
           <div className="modalContent" onClick={(e) => e.stopPropagation()}>
             {children}
           </div>

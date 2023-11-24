@@ -1,10 +1,28 @@
+import { useState } from "react";
 
-export function Navigation() {
-  const getPoke = async ({ name = "charizard" }) => {
+export function Navigation({onClickdata}) {
+
+  const [nameP, setNameP] = useState('');
+
+  const getPoke = async () => {
     try {
-      const resp = await fetch("https://pokeapi.co/api/v2/pokemon/" + name);
+      const resp = await fetch("https://pokeapi.co/api/v2/pokemon/" + nameP.toLocaleLowerCase());
       const data = await resp.json();
-      console.log(data);
+      const { name, sprites, id, types, height, weight, abilities, stats } = data;
+      
+        const selectedData = {
+          name,
+          sprite: sprites.front_default, // Puedes ajustar esto según la estructura de sprites
+          id,
+          types,
+          height,
+          weight,
+          abilities,
+          stats,
+        };
+       onClickdata(selectedData);
+      console.log(selectedData);
+      setNameP('');
     } catch (error) {
       console.log(error);
     }
@@ -19,6 +37,8 @@ export function Navigation() {
           name=""
           id=""
           placeholder="Search your Pokemon"
+          value={nameP}
+          onChange={e => setNameP(e.target.value)}
         />
         <div>
           <button

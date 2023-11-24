@@ -71,7 +71,7 @@ export function PokeCard({
       <picture>
         <img
           style={{ imageRendering: "pixelated" }}
-          className="absolute -top-7 left-1/2 -translate-x-1/2 group-hover:scale-[1.15] transition-all duration-100 ease-in h-28 max-w-28 mx-auto"
+          className="absolute -top-8 left-1/2 -translate-x-1/2 group-hover:scale-[1.15] transition-all duration-100 ease-in h-28 max-w-28 mx-auto"
           src={sprite}
           alt=""
         />

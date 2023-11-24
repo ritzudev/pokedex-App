@@ -49,6 +49,7 @@ h5{
 
 /* Hide scrollbar for IE, Edge and Firefox */
 .no-scrollbar {
+  overscroll-behavior: contain;
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
@@ -72,7 +73,6 @@ h5{
   border-radius: 8px;
   animation: slideUp 0.5s ease-out;
   display: flex;
-  overflow: scroll;
   height: 70vh;
 }
 
