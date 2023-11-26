@@ -1,12 +1,17 @@
 'use client'
-export function TopScroll() {
+import { usePathname } from 'next/navigation'
 
+export function TopScroll() {
+const pathName = usePathname();
   function topScroll() {
     window.scrollTo(0, 0);
   }
 
   return (
-    <div
+    <>
+    {
+      pathName === '/trivia' ? (<></>) : (
+        <div
           onClick={topScroll}
           className="sticky w-12 h-12 px-2 py-4 flex justify-center items-center bg-white rounded-lg float-right bottom-10 right-10 cursor-pointer"
         >
@@ -16,5 +21,9 @@ export function TopScroll() {
             alt=""
           />
         </div>
+  )
+      
+    }
+    </>
   )
 }

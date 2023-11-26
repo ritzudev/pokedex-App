@@ -64,10 +64,10 @@ export default function Home() {
     }
   };
 
-  /* const setdataId = (data) => {
+  const setdataId = (data) => {
     const id = parseInt(data.idPokemon);
     setIdPoke(id);
-  }; */
+  };
 
   const fetchDatapoke = async () => {
     if (idPoke === null) return;
