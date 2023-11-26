@@ -40,13 +40,14 @@ export default function Home() {
   const [hasMore, setHasMore] = useState(true);
 
   const fetchMorePokemon = async () => {
-    console.log('no me llames mano, y ahora? jaaaaaaaa');
-    const currentLength = dataPokemones.length;
     /* setStartIndex(currentLength + 1);
     setEndIndex(currentLength + 10) */
+
+    console.log("no me llames mano, y ahora? jaaaaaaaa");
+    const currentLength = dataPokemones.length;
     const newPokemon = await fetchPokemon(
       currentLength + 1,
-      currentLength + 10
+      currentLength + 20
     );
 
     if (newPokemon.length === 0) {
@@ -54,9 +55,10 @@ export default function Home() {
     } else {
       setDataPokemones((prevData) => {
         // Filtra duplicados antes de concatenar los nuevos datos
-        const filteredData = prevData.filter((prevPokemon) => (
-          !newPokemon.some((newPokemon) => newPokemon.id === prevPokemon.id)
-        ));
+        const filteredData = prevData.filter(
+          (prevPokemon) =>
+            !newPokemon.some((newPokemon) => newPokemon.id === prevPokemon.id)
+        );
 
         return [...filteredData, ...newPokemon];
       });
@@ -118,9 +120,9 @@ export default function Home() {
   }, [endIndex, isLoading]); */
 
   const fetchData = async () => {
-    console.log('mano yada');
+    console.log("mano yada");
     if (dataPokemones.length != 0) return;
-    
+
     setIsLoading(true);
     try {
       const newData = await fetchPokemon(startIndex, endIndex);
@@ -161,7 +163,15 @@ export default function Home() {
       next={fetchMorePokemon}
       className="grid grid-cols-1 pt-10 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 min-h-screen items-center justify-center  gap-4 py-6 w-full"
       hasMore={hasMore}
-      loader={<h4>Loading...</h4>}
+      loader={
+        <div className="col-span-1 sm:col-span-2 xl:col-span-3 2xl:col-span-4 items-center flex justify-center">
+          <img
+            className="animate-spin w-20 col-span-4"
+            src="https://js-pokedex-virid.vercel.app/src/pokeball-icon.png"
+            alt=""
+          />
+        </div>
+      }
     >
       {dataPokemones.map((data, index) => {
         const poke = {

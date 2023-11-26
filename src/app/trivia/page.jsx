@@ -90,7 +90,7 @@ export default function Trivia() {
                 <li
                   onClick={() => validAnswerd(option)}
                   key={index}
-                  className="w-64 text-xl bg-white text-center rounded-md hover:bg-white cursor-pointer py-1 text-black"
+                  className="w-64 text-xl bg-white text-center rounded-md hover:bg-yellow-300 cursor-pointer py-1 text-black"
                 >
                   {option.name}
                 </li>
