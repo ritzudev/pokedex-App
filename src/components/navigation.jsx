@@ -4,6 +4,12 @@ export function Navigation({onClickdata}) {
 
   const [nameP, setNameP] = useState('');
 
+  const enterPress = (event) => {
+    if(event.key === 'Enter' && nameP !== ''){
+      getPoke()
+    }
+  }
+
   const getPoke = async () => {
     try {
       const resp = await fetch("https://pokeapi.co/api/v2/pokemon/" + nameP.toLocaleLowerCase());
@@ -39,6 +45,7 @@ export function Navigation({onClickdata}) {
           placeholder="Search your Pokemon"
           value={nameP}
           onChange={e => setNameP(e.target.value)}
+          onKeyDown={enterPress}
         />
         <div>
           <button

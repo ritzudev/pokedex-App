@@ -13,7 +13,6 @@ export default function Trivia() {
   const filterImage = isCorrect ? "brightness-1" : "brightness-0";
 
   const validAnswerd = (value) => {
-    console.log("hola", value);
     setIsCorrect(true);
     if (currentPokemon.id === value.id) {
       setMessage(`Correcto, ${ currentPokemon.name.toUpperCase() }`);
@@ -63,7 +62,6 @@ export default function Trivia() {
   }, [options]);
 
   const newGame = () => {
-    console.log("holi");
     getOptionsPokemon();
     setMessage('');
     setIsCorrect(false);
