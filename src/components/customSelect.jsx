@@ -53,10 +53,10 @@ export function CustomSelect({ typeS, onChange }) {
       >
         {typeS == 1
           ? listRegion.map((data, index) => {
-              return <option value={data.value}>{data.name}</option>;
+              return <option key={index} value={data.value}>{data.name}</option>;
             })
           : tiposPokemon.map((data, index) => {
-              return <option value={data}>{data}</option>;
+              return <option key={index} value={data}>{data}</option>;
             })}
       </select>
       {/*  <img className="w-5" src="https://upload.wikimedia.org/wikipedia/commons/9/9d/Arrow-down.svg" alt="" />
