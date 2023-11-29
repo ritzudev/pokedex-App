@@ -44,7 +44,7 @@ export function Navigation({onClickdata}) {
           id=""
           placeholder="Search your Pokemon"
           value={nameP}
-          onChange={e => setNameP(e.target.value)}
+          onChange={e => (e.target.value)}
           onKeyDown={enterPress}
         />
         <div>

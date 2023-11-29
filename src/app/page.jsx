@@ -39,15 +39,18 @@ export default function Home() {
 
   const [hasMore, setHasMore] = useState(true);
 
+  const [regionValue, setRegionValue] = useState('');
+
   const fetchMorePokemon = async () => {
     /* setStartIndex(currentLength + 1);
     setEndIndex(currentLength + 10) */
 
-    console.log("no me llames mano, y ahora? jaaaaaaaa");
+    console.log("no me llames mano, y ahora? jaaaaaaaa", dataPokemones[dataPokemones.length - 1]);
     const currentLength = dataPokemones.length;
+    const currentID = dataPokemones[dataPokemones.length - 1];
     const newPokemon = await fetchPokemon(
-      currentLength + 1,
-      currentLength + 20
+      currentID.id + 1,
+      currentID.id + 20
     );
 
     if (newPokemon.length === 0) {
@@ -157,6 +160,43 @@ export default function Home() {
       ))}
     </div> */
   }
+
+  const filterRegion = async (value) => {
+    console.log(value);
+    let startI = 0;
+    let endI = 0;
+
+    if (value == '1') {
+      startI = 0;
+      endI= 20;
+      //endI = 151;
+    }else if (value == '2') {
+      startI = 152;
+      endI = 162;
+    }else if (value == '3') {
+      startI = 252; 
+      endI = 262
+     // endI = 386;
+    }else if (value == '4') {
+      startI = 387;
+      endI = 397;
+      //endI = 493;
+    }else if (value == '5') {
+      startI = 494;
+      endI = 504
+      //endI = 649;
+    }
+
+    setIsLoading(true);
+    try {
+      const newData = await fetchPokemon(startI, endI);
+      setDataPokemones(newData);
+    } catch (error) {
+      console.error("Error fetching Pokémon data:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
   const PokemonList = ({ data, onClick }) => (
     <InfiniteScroll
       dataLength={dataPokemones.length}
@@ -197,6 +237,17 @@ export default function Home() {
     <main className="flex px-20 sm:px-32 xl:px-50 min-w-[310px]">
       <div className="w-full  gap-4 lg:mr-[390px]  ">
         <Navigation onClickdata={handlePokeCardClick} />
+        <div className="container">
+        <div className="select">
+        <select onChange={e => filterRegion(e.target.value)}>
+          <option value="1">Kanto</option>
+          <option value="2">Johto</option>
+          <option value="3">Hoenn</option>
+          <option value="4">Sinnoh</option>
+          <option value="5">Teselia</option>
+        </select>
+        </div>
+        </div>
         <PokemonList />
       </div>
       {dataPokeInfo.length === 0 ? (
