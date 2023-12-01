@@ -2,60 +2,87 @@
 
 import { useState, useEffect } from "react";
 
-async function getDescription(id) {
-  try {
-    const resp = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${id}`);
-    const data = await resp.json();
-    return data;
-  } catch (error) {
-    console.error("Error fetching Pokemon species:", error);
-    throw error; // Puedes manejar el error según tus necesidades
-  }
-}
+/* 
 
-async function getEvolution(url) {
-  try {
-    const resp = await fetch(url);
-    const data = await resp.json();
-    console.log(data);
-    return data;
-  } catch (error) {
-    console.error("Error fetching evolution data:", error);
-    throw error; // Puedes manejar el error según tus necesidades
-  }
-}
+DW: https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/1.svg
+GIF: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/${dataPoke.id}.gif`
+EVO: https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/' + id + '.png';
+
+*/
 
 export function PokeInfo({ dataPoke, onClick }) {
   const [descPokemon, setDescPokemon] = useState("");
   const [evoPokemon, setEvoPokemon] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [infoPokemon, setInfoPokemon] = useState({});
+  const [spritePokemon, setSpritePokemon] = useState("");
+
+  const getInfoPokemon = async () => {
+    console.log('cuantas veces más???');
+    try {
+      const resp = await fetch(
+        `https://pokeapi.co/api/v2/pokemon/${dataPoke.id}`
+      );
+      const data = await resp.json();
+
+      setInfoPokemon(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const getDescription = async () => {
+
+    try {
+      setIsLoading(true);
+      const resp = await fetch(
+        `https://pokeapi.co/api/v2/pokemon-species/${dataPoke.id}`
+      );
+      const speciesData = await resp.json();
+
+      getEvolution(speciesData.evolution_chain.url);
+      const flavorText = speciesData.flavor_text_entries[0].flavor_text.replace(
+        /\n|\f/g,
+        " "
+      );
+      setDescPokemon(flavorText);
+    } catch (error) {
+      console.error("Error fetching Pokemon species:", error);
+      throw error; // Puedes manejar el error según tus necesidades
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const getEvolution = async (url) => {
+    try {
+      const resp = await fetch(url);
+      const evolutionData = await resp.json();
+      setEvoPokemon(evolutionData);
+    } catch (error) {
+      console.error("Error fetching evolution data:", error);
+      throw error; // Puedes manejar el error según tus necesidades
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setIsLoading(true);
+    
+    getInfoPokemon();
+    getDescription();
+    validImage();
+    
+  }, [dataPoke]);
 
-        const speciesData = await getDescription(dataPoke.id);
-        const flavorText =
-          speciesData.flavor_text_entries[0].flavor_text.replace(/\n|\f/g, " ");
-        setDescPokemon(flavorText);
+  const validImage = () => {
+    if (dataPoke.id >= 650) {
+      setSpritePokemon(dataPoke.sprite);
+    } else {
+      setSpritePokemon(
+        `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/${dataPoke.id}.gif`
+      );
+    }
+  };
 
-        const evolutionData = await getEvolution(
-          speciesData.evolution_chain.url
-        );
-        setEvoPokemon(evolutionData);
-      } catch (error) {
-        // Maneja el error según tus necesidades
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [dataPoke.id]);
-
-  const imagePoke = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/${dataPoke.id}.gif`;
-  /*  `` */
   const typeColors = {
     normal: "#BCBCAC",
     fighting: "#BC5442",
@@ -98,7 +125,7 @@ export function PokeInfo({ dataPoke, onClick }) {
 
   function totalStats() {
     var total = 0;
-    dataPoke.stats.forEach((element) => {
+    infoPokemon?.stats?.forEach((element) => {
       total += element.base_stat;
     });
     return total;
@@ -115,58 +142,65 @@ export function PokeInfo({ dataPoke, onClick }) {
   }
 
   const PokemonImage = ({ species }) => {
-    const idPokemon = filterIdFromSpeciesURL(species?.url)
+    const idPokemon = filterIdFromSpeciesURL(species?.url);
     return (
-    <img
-    onClick={() =>
-      onClick({
-        idPokemon
-    })}
-      className="h-16 w-16"
-      src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${idPokemon}.png`}
-      alt=""
-    />
-  
-    )
-  }
-  
+      <img
+        onClick={() =>
+          onClick({
+            idPokemon,
+          })
+        }
+        className="h-16 w-16"
+        src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${idPokemon}.png`}
+        alt=""
+      />
+    );
+  };
+
   const EvolutionDetails = ({ details }) => (
     <span className="bg-[#F6F8FC] dark:bg-[#1A1A1A] px-4 py-1 rounded-full text-xs font-bold flex h-min">
-      {details.min_level ? `Lvl ${details.min_level}` : '?'}
+      {details.min_level ? `Lvl ${details.min_level}` : "?"}
     </span>
   );
 
   const EvolutionChain = ({ chain }) => {
-
     if (chain === undefined) {
       return;
     }
 
     return (
       <section className="flex flex-wrap sm:flex-nowrap items-center justify-center pb-4">
-      {isLoading ? (
-        <h1>loading...</h1>
-      ) : (
-        <>
-          <PokemonImage species={chain?.species} />
-          <EvolutionDetails details={chain?.evolves_to[0].evolution_details[0]} />
-  
-          {chain.evolves_to?.[0] && (
-            <>
-              <PokemonImage species={chain.evolves_to[0].species} />
-              
-              {chain.evolves_to[0]?.evolves_to?.[0] && (
-                <>
-                  <EvolutionDetails details={chain.evolves_to[0].evolves_to[0].evolution_details[0]} />
-                  <PokemonImage species={chain.evolves_to[0].evolves_to[0].species} />
-                </>
-              )}
-            </>
-          )}
-        </>
-      )}
-    </section>
-    )
+        {isLoading ? (
+          <h1>loading...</h1>
+        ) : (
+          <>
+            <PokemonImage species={chain?.species} />
+            <EvolutionDetails
+              details={chain?.evolves_to[0].evolution_details[0]}
+            />
+
+            {chain.evolves_to?.[0] && (
+              <>
+                <PokemonImage species={chain.evolves_to[0].species} />
+
+                {chain.evolves_to[0]?.evolves_to?.[0] && (
+                  <>
+                    <EvolutionDetails
+                      details={
+                        chain.evolves_to[0].evolves_to[0].evolution_details[0]
+                      }
+                    />
+                    <PokemonImage
+                      species={chain.evolves_to[0].evolves_to[0].species}
+                    />
+                  </>
+                )}
+              </>
+            )}
+          </>
+        )}
+      </section>
+    );
   };
 
   return (
@@ -174,12 +208,12 @@ export function PokeInfo({ dataPoke, onClick }) {
       <picture className="">
         <img
           id="current-pokemon-image"
-          src={imagePoke}
+          src={spritePokemon}
           style={{ height: "140px", imageRendering: "pixelated" }}
-          className="absolute top-6  lg:-top-20 mx-auto left-1/2 -translate-x-1/2"
+          className="absolute  -top-20 mx-auto left-1/2 -translate-x-1/2"
         />
       </picture>
-      <section className=" lg:mt-20 flex flex-col items-center overflow-scroll no-scrollbar dark:text-white ">
+      <section className="mt-20 flex flex-col items-center overflow-scroll no-scrollbar dark:text-white h-[65vh] lg:h-[70vh]">
         <span className="text-[#8F9396] text-xs font-bold">
           # {dataPoke.id}
         </span>
@@ -187,13 +221,13 @@ export function PokeInfo({ dataPoke, onClick }) {
           {capitalizeFirts(dataPoke.name)}
         </span>
         <div className="flex gap-4 py-4">
-          {dataPoke.types.map(({ type }, index) => (
+          {dataPoke.types.map(({ name }, index) => (
             <span
               key={index}
-              style={{ backgroundColor: typeColors[type.name] }}
+              style={{ backgroundColor: typeColors[name] }}
               className=" px-2 py-1 rounded-md text-white text-sm"
             >
-              {capitalizeFirts(type.name)}
+              {capitalizeFirts(name)}
             </span>
           ))}
         </div>
@@ -212,19 +246,20 @@ export function PokeInfo({ dataPoke, onClick }) {
           <div className="w-full">
             <h4>Height</h4>
             <h5 className="w-full bg-[#F6F8FC] dark:bg-[#1A1A1A] rounded-full py-1 my-2">
-              {dataPoke.height / 10}m
+              {infoPokemon.height / 10}m
             </h5>
           </div>
           <div className="w-full">
             <h4>Weight</h4>
             <h5 className="w-full bg-[#F6F8FC] dark:bg-[#1A1A1A] rounded-full py-1 my-2">
-              {dataPoke.weight / 10}kg
+              {infoPokemon.weight / 10}kg
             </h5>
           </div>
         </div>
+
         <h4>Abilities</h4>
         <div className="grid grid-cols-2 w-full gap-4 text-center py-4">
-          {dataPoke.abilities.map(({ ability }, index) => (
+          {infoPokemon?.abilities?.map(({ ability }, index) => (
             <h5
               key={index}
               className="w-full bg-[#F6F8FC] dark:bg-[#1A1A1A] rounded-full py-1 flex justify-center "
@@ -233,10 +268,10 @@ export function PokeInfo({ dataPoke, onClick }) {
             </h5>
           ))}
         </div>
-        {/* STATS */}
+
         <h4>Stats</h4>
         <section className="flex flex-wrap gap-2 py-4 justify-center">
-          {dataPoke.stats.map(({ base_stat, stat }, index) => {
+          {infoPokemon?.stats?.map(({ base_stat, stat }, index) => {
             return (
               <div
                 key={index}
@@ -260,10 +295,8 @@ export function PokeInfo({ dataPoke, onClick }) {
           </div>
         </section>
 
-        {/* EVOLUTION */}
         <h4>Evolution</h4>
         <EvolutionChain chain={evoPokemon?.chain} />
-        
       </section>
     </>
   );

@@ -1,26 +1,15 @@
 export function CustomSelect({ typeS, onChange }) {
   const listRegion = [
-    {
-      name: "Kanto",
-      value: "1",
-    },
-    {
-      name: "Johto",
-      value: "2",
-    },
-    {
-      name: "Hoenn",
-      value: "3",
-    },
-    {
-      name: "Sinnoh",
-      value: "4",
-    },
-    {
-      name: "Teselia",
-      value: "5",
-    },
+    "Kanto",
+    "Johto",
+    "Hoenn",
+    "Sinnoh",
+    "Teselia",
+    "Kalos",
+    "Alola",
+    "Galar",
   ];
+
   const tiposPokemon = [
     "grass",
     "fire",
@@ -40,6 +29,8 @@ export function CustomSelect({ typeS, onChange }) {
     "Hada",
   ];
 
+  const selectList = typeS === 1 ? listRegion : tiposPokemon;
+
   return (
     <div className="flex flex-row items-center rounded-xl cursor-pointer bg-white dark:bg-[#333333] dark:text-white w-max relative">
       <img
@@ -51,13 +42,13 @@ export function CustomSelect({ typeS, onChange }) {
         className="w-40 appearance-none cursor-pointer  p-2 bg-white dark:bg-[#333333] pl-10 rounded-xl  "
         onChange={(e) => onChange(e.target.value)}
       >
-        {typeS == 1
-          ? listRegion.map((data, index) => {
-              return <option key={index} value={data.value}>{data.name}</option>;
-            })
-          : tiposPokemon.map((data, index) => {
-              return <option key={index} value={data}>{data}</option>;
-            })}
+        {selectList.map((data, index) => {
+          return (
+            <option key={index} value={ typeS === 1 ? index + 1 : data}>
+              {data}
+            </option>
+          );
+        })}
       </select>
       {/*  <img className="w-5" src="https://upload.wikimedia.org/wikipedia/commons/9/9d/Arrow-down.svg" alt="" />
        */}

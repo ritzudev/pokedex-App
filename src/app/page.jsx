@@ -8,6 +8,7 @@ import { Modal } from "@/components/modal";
 import noPokemonSelected from "../../public/img/no-pokemon-selected.png";
 import Image from "next/image";
 import InfiniteScroll from "react-infinite-scroll-component";
+import PokeListNew from "@/components/pokelistnew";
 
 async function fetchPokemon(startIndex, endIndex) {
   const p = [];
@@ -186,6 +187,18 @@ export default function Home() {
       startI = 494;
       endI = 504;
       //endI = 649;
+    } else if (value == "6") {
+      startI = 650;
+      endI = 660;
+      //endI =  650 a 721
+    } else if (value == "7") {
+      startI = 722;
+      endI = 732;
+      //endI = 722 a 809.
+    }else if (value == "8") {
+      startI = 810;
+      endI = 820;
+      //endI = 810 - 
     }
 
     setIsLoading(true);
@@ -229,9 +242,11 @@ export default function Home() {
       }
     >
       {dataPokemones.map((data, index) => {
+        const imgD = data.sprites.front_default;
+        const imgDW = data.sprites.other.dream_world.front_default;
         const poke = {
           name: data.name,
-          sprite: data.sprites.other.dream_world.front_default,
+          sprite: imgDW === null ? imgD : imgDW,
           /* sprite: data.sprites.front_default, */
           id: data.id,
           types: data.types,
@@ -248,6 +263,9 @@ export default function Home() {
     </InfiniteScroll>
   );
 
+  const click = () => {
+    setDataPokeInfo([])
+  }
 
   return (
     <main className="flex px-20 sm:px-32 xl:px-50 min-w-[310px]">
@@ -257,7 +275,7 @@ export default function Home() {
           <CustomSelect typeS={1} onChange={filterRegion} />
           <CustomSelect typeS={2} onChange={filterType} />
         </div>
-        <PokemonList />
+        <PokeListNew onClick={handlePokeCardClick} />
       </div>
       {dataPokeInfo.length === 0 ? (
         <div className="mt-44 hidden lg:flex bg-white dark:bg-[#333333] fixed  md:right-32 xl:right-32 h-[76vh] w-[23rem] rounded-2xl shadow-xl justify-center text-center flex-col items-center px-4 font-mono gap-2 ">
@@ -286,16 +304,18 @@ export default function Home() {
           </span>
         </div>
       ) : (
-        <div className="hidden lg:flex mt-44 bg-white dark:bg-[#333333] fixed  md:right-32 xl:right-32  w-[23rem]  rounded-2xl shadow-xl  flex-col items-center px-4  gap-2 lg:h-[75vh] lg:bottom-20">
-          <PokeInfo dataPoke={dataPokeInfo} onClick={setdataId} />
-        </div>
+
+        <Modal click={click} dataPokeInfo={dataPokeInfo}/>
+
+
+        
       )}
 
       {isModalOpen && dataPokeInfo.length !== 0 ? (
         <>
-          <Modal onClose={closeModal}>
+          {/* <Modal onClose={closeModal}>
             <PokeInfo dataPoke={dataPokeInfo} />
-          </Modal>
+          </Modal> */}
         </>
       ) : (
         <> </>
