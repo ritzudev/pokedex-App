@@ -91,9 +91,9 @@ export default function Home() {
     }
   };
 
-  useEffect(() => {
+  /* useEffect(() => {
     fetchDatapoke();
-  }, [idPoke]);
+  }, [idPoke]); */
 
   const handlePokeCardClick = (data) => {
     setDataPokeInfo(data);
@@ -139,9 +139,9 @@ export default function Home() {
     }
   };
 
-  useEffect(() => {
+/*   useEffect(() => {
     fetchData();
-  }, []);
+  }, []); */
 
   /* useEffect(() => {
     window.addEventListener("scroll", handleScroll);
@@ -155,126 +155,19 @@ export default function Home() {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
-  {
-    /* <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 min-h-screen items-center justify-center gap-4 py-6 w-full">
-      {data.map((pokemon) => (
-        <PokeCard key={pokemon.id} {...pokemon} onClick={onClick} />
-      ))}
-    </div> */
-  }
 
-  const filterRegion = async (value) => {
-    console.log(value);
-    let startI = 0;
-    let endI = 0;
 
-    if (value == "1") {
-      startI = 1;
-      endI = 20;
-      //endI = 151;
-    } else if (value == "2") {
-      startI = 152;
-      endI = 162;
-    } else if (value == "3") {
-      startI = 252;
-      endI = 262;
-      // endI = 386;
-    } else if (value == "4") {
-      startI = 387;
-      endI = 397;
-      //endI = 493;
-    } else if (value == "5") {
-      startI = 494;
-      endI = 504;
-      //endI = 649;
-    } else if (value == "6") {
-      startI = 650;
-      endI = 660;
-      //endI =  650 a 721
-    } else if (value == "7") {
-      startI = 722;
-      endI = 732;
-      //endI = 722 a 809.
-    }else if (value == "8") {
-      startI = 810;
-      endI = 820;
-      //endI = 810 - 
-    }
 
-    setIsLoading(true);
-    try {
-      const newData = await fetchPokemon(startI, endI);
-      setDataPokemones(newData);
-    } catch (error) {
-      console.error("Error fetching Pokémon data:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const filterType = async (value) => {
-    console.log(value, dataPokemones);
-
-    const pokefilter = dataPokemones.filter(poke => poke.types.some(type => type.type.name === value))
-    
-    setDataPokemones(pokefilter)
-
-   /*  const resp = await fetch('https://pokeapi.co/api/v2/type/' + value );
-    const data = await resp.json();
-    console.log(data); */
-
-  };
-
-  const PokemonList = ({ data, onClick }) => (
-    <InfiniteScroll
-      dataLength={dataPokemones.length}
-      next={fetchMorePokemon}
-      className="grid grid-cols-1 pt-10 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 min-h-screen items-center justify-center  gap-4 py-6 w-full"
-      hasMore={hasMore}
-      loader={
-        <div className="col-span-1 sm:col-span-2 xl:col-span-3 2xl:col-span-4 items-center flex justify-center">
-          <img
-            className="animate-spin w-20 col-span-4"
-            src="https://js-pokedex-virid.vercel.app/src/pokeball-icon.png"
-            alt=""
-          />
-        </div>
-      }
-    >
-      {dataPokemones.map((data, index) => {
-        const imgD = data.sprites.front_default;
-        const imgDW = data.sprites.other.dream_world.front_default;
-        const poke = {
-          name: data.name,
-          sprite: imgDW === null ? imgD : imgDW,
-          /* sprite: data.sprites.front_default, */
-          id: data.id,
-          types: data.types,
-          height: data.height,
-          weight: data.weight,
-          abilities: data.abilities,
-          stats: data.stats,
-          species: data.species,
-        };
-        return (
-          <PokeCard key={data.id} {...poke} onClick={handlePokeCardClick} />
-        );
-      })}
-    </InfiniteScroll>
-  );
 
   const click = () => {
-    setDataPokeInfo([])
-  }
+    setDataPokeInfo([]);
+  };
 
   return (
     <main className="flex px-20 sm:px-32 xl:px-50 min-w-[310px]">
       <div className="w-full  gap-4 lg:mr-[390px]  ">
-        <Navigation onClickdata={handlePokeCardClick} />
-        <div className="flex gap-6">
-          <CustomSelect typeS={1} onChange={filterRegion} />
-          <CustomSelect typeS={2} onChange={filterType} />
-        </div>
+       {/*  <Navigation onClickdata={handlePokeCardClick} /> */}
+        
         <PokeListNew onClick={handlePokeCardClick} />
       </div>
       {dataPokeInfo.length === 0 ? (
@@ -304,21 +197,7 @@ export default function Home() {
           </span>
         </div>
       ) : (
-
-        <Modal click={click} dataPokeInfo={dataPokeInfo}/>
-
-
-        
-      )}
-
-      {isModalOpen && dataPokeInfo.length !== 0 ? (
-        <>
-          {/* <Modal onClose={closeModal}>
-            <PokeInfo dataPoke={dataPokeInfo} />
-          </Modal> */}
-        </>
-      ) : (
-        <> </>
+        <Modal click={click} dataPokeInfo={dataPokeInfo} />
       )}
     </main>
   );

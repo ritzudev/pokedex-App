@@ -28,14 +28,15 @@ export function Modal({ click, dataPokeInfo, children, onClose }) {
   const shouldRenderModal = width <= minWidthToShowModal;
 
   return (
-    
-    <div className={shouldRenderModal ? 'modalOverlay' : ''} onClick={()=> click()}>
-        <div className="fixed lg:flex mt-24 lg:mt-44 bg-white dark:bg-[#333333]  lg:right-32 xl:right-32 mx-32 lg:mx-0 right-0  lg:w-[23rem]  rounded-2xl shadow-xl  flex-col items-center px-4  gap-2  lg:bottom-10">
-          <PokeInfo  dataPoke={dataPokeInfo} />
-        </div>
-        </div>
-    
-  )
+    <div
+      className={shouldRenderModal ? "modalOverlay" : ""}
+      onClick={() => shouldRenderModal ? click() : '' }
+    >
+      <div onClick={(e) => e.stopPropagation()} className="fixed lg:flex mt-24 lg:mt-44 bg-white dark:bg-[#333333]  lg:right-32 xl:right-32 mx-32 lg:mx-0 right-0  lg:w-[23rem]  rounded-2xl shadow-xl  flex-col items-center px-4  gap-2  lg:bottom-10">
+        <PokeInfo dataPoke={dataPokeInfo} />
+      </div>
+    </div>
+  );
 
   /* return (
     <>

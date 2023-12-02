@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 
-export function Navigation({onClickdata}) {
+export function Navigation({valueP, onClickdata, onChange}) {
 
   const [nameP, setNameP] = useState('');
 
@@ -34,6 +34,19 @@ export function Navigation({onClickdata}) {
     }
   };
 
+  const debounceRef = useRef();
+
+  const onQueryChanged = (e) => {
+     if (debounceRef.current) {
+        clearTimeout(debounceRef.current);
+     }
+
+     debounceRef.current = setTimeout(() => {
+        //console.log('values mi king: ', e.target.value);
+        onChange(e.target.value)
+     }, 1000);
+  }
+
   return (
     <div className="w-full  my-10 ">
       <div className="w-full h-16 bg-white dark:bg-[#333333] flex flex-row items-center rounded-xl px-4 shadow-xl">
@@ -43,8 +56,8 @@ export function Navigation({onClickdata}) {
           name=""
           id=""
           placeholder="Search your Pokemon"
-          value={nameP}
-          onChange={e => setNameP(e.target.value)}
+         
+          onChange={e => onQueryChanged(e)}
           onKeyDown={enterPress}
         />
         <div>
@@ -52,6 +65,8 @@ export function Navigation({onClickdata}) {
             className="bg-[#FF5350] h-10 w-10 flex justify-center items-center rounded-xl text-white shadow-[rgba(0,0,0.1,0.1)_10px_5px_4px_0px]  shadow-[#ff535088]"
             type="button"
             onClick={getPoke}
+            name="search-button"
+            title="serach-button"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

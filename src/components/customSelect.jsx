@@ -32,7 +32,7 @@ export function CustomSelect({ typeS, onChange }) {
   const selectList = typeS === 1 ? listRegion : tiposPokemon;
 
   return (
-    <div className="flex flex-row items-center rounded-xl cursor-pointer bg-white dark:bg-[#333333] dark:text-white w-max relative">
+    <div className="flex flex-row items-center rounded-xl cursor-pointer bg-white dark:bg-[#333333] dark:text-white md:w-max relative">
       <img
         className="absolute left-2 w-5 "
         src="https://js-pokedex-virid.vercel.app/src/pokeball-icon.png"
@@ -41,12 +41,18 @@ export function CustomSelect({ typeS, onChange }) {
       <select
         className="w-40 appearance-none cursor-pointer  p-2 bg-white dark:bg-[#333333] pl-10 rounded-xl  "
         onChange={(e) => onChange(e.target.value)}
+        name="select-filter"
+        title="select-filter"
       >
+        <option value={null}>{typeS === 1 ? 'Region' : 'Type'}</option>
         {selectList.map((data, index) => {
           return (
+    
+            
             <option key={index} value={ typeS === 1 ? index + 1 : data}>
               {data}
             </option>
+           
           );
         })}
       </select>
