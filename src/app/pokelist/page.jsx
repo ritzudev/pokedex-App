@@ -4,7 +4,7 @@
 import { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 
-export default function pokelist() {
+export default function Pokelist() {
   const [currentList, setCurrentList] = useState([]);
   const [hasMore, setHasMore] = useState(true);
   const [maxIndex, setMaxIndex] = useState(20); 

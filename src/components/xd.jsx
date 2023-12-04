@@ -64,7 +64,7 @@ const getAllTypes = async () => {
   }
 };
 
-export default function pokelist() {
+export default function Pokelist() {
   const [pokemons, setPokemons] = useState([]);
   const [currentList, setCurrentList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
