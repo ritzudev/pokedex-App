@@ -192,9 +192,9 @@ export default function PokeListNew({ onClick }) {
       3: { startI: 251, endI: 386 },
       4: { startI: 386, endI: 493 },
       5: { startI: 493, endI: 649 },
-      6: { startI: 650, endI: 721 },
-      7: { startI: 722, endI: 809 },
-      8: { startI: 810, endI: 890 },
+      6: { startI: 649, endI: 721 },
+      7: { startI: 721, endI: 809 },
+      8: { startI: 809, endI: 890 },
     };
     const range = valueRanges[value];
 
@@ -220,7 +220,7 @@ export default function PokeListNew({ onClick }) {
 
   const filterName = (value) => {
     console.log(value);
-    setHasMore(true);
+    setHasMore(false);
     const data =
       value !== ""
         ? currentList.filter((poke) => poke.name.includes(value))
